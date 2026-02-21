@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Activity,
+  UserRound,
 } from 'lucide-react'
 import { useAppContext } from '@/context/useAppContext'
 import NavItem from './NavItem'
@@ -15,6 +16,7 @@ import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/overview', icon: UserRound, label: 'Patient Overview' },
   { to: '/patients', icon: Users, label: 'Patients' },
   { to: '/documents', icon: FileText, label: 'Documents' },
   { to: '/ai-assistant', icon: MessageSquare, label: 'AI Assistant' },

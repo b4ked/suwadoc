@@ -5,8 +5,10 @@ import {
   type ChatMessage,
   type UploadStep,
   MOCK_PATIENT,
-  MOCK_DOCUMENTS,
+  ALL_PATIENTS,
+  ALL_DOCUMENTS,
   INITIAL_CHAT_MESSAGES,
+  CHAT_MESSAGES_BY_PATIENT,
 } from '@/data/mockData'
 
 // ============================================================
@@ -14,6 +16,8 @@ import {
 // ============================================================
 
 export interface AppState {
+  patients: Patient[]
+  currentPatientId: string
   currentPatient: Patient
   documents: MedicalDocument[]
   isUploadModalOpen: boolean
@@ -23,9 +27,15 @@ export interface AppState {
   verifiedDocumentIds: Set<string>
 }
 
+function getDocsForPatient(patient: Patient, allDocs: MedicalDocument[]): MedicalDocument[] {
+  return allDocs.filter((d) => patient.documents.includes(d.id))
+}
+
 const initialState: AppState = {
+  patients: ALL_PATIENTS,
+  currentPatientId: MOCK_PATIENT.id,
   currentPatient: MOCK_PATIENT,
-  documents: MOCK_DOCUMENTS.slice(0, 3), // doc-004 reserved for upload demo
+  documents: getDocsForPatient(MOCK_PATIENT, ALL_DOCUMENTS),
   isUploadModalOpen: false,
   uploadStep: 'idle',
   isSidebarCollapsed: false,
@@ -38,6 +48,7 @@ const initialState: AppState = {
 // ============================================================
 
 type Action =
+  | { type: 'SET_CURRENT_PATIENT'; payload: string }
   | { type: 'OPEN_UPLOAD_MODAL' }
   | { type: 'CLOSE_UPLOAD_MODAL' }
   | { type: 'SET_UPLOAD_STEP'; payload: UploadStep }
@@ -48,6 +59,17 @@ type Action =
 
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
+    case 'SET_CURRENT_PATIENT': {
+      const patient = state.patients.find((p) => p.id === action.payload)
+      if (!patient) return state
+      return {
+        ...state,
+        currentPatientId: patient.id,
+        currentPatient: patient,
+        documents: getDocsForPatient(patient, ALL_DOCUMENTS),
+        chatMessages: CHAT_MESSAGES_BY_PATIENT[patient.id] ?? [],
+      }
+    }
     case 'OPEN_UPLOAD_MODAL':
       return { ...state, isUploadModalOpen: true, uploadStep: 'upload' }
     case 'CLOSE_UPLOAD_MODAL':
@@ -83,6 +105,7 @@ function reducer(state: AppState, action: Action): AppState {
 
 export interface AppContextValue {
   state: AppState
+  setCurrentPatient: (id: string) => void
   openUploadModal: () => void
   closeUploadModal: () => void
   setUploadStep: (step: UploadStep) => void
@@ -99,6 +122,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const value: AppContextValue = {
     state,
+    setCurrentPatient: (id) => dispatch({ type: 'SET_CURRENT_PATIENT', payload: id }),
     openUploadModal: () => dispatch({ type: 'OPEN_UPLOAD_MODAL' }),
     closeUploadModal: () => dispatch({ type: 'CLOSE_UPLOAD_MODAL' }),
     setUploadStep: (step) => dispatch({ type: 'SET_UPLOAD_STEP', payload: step }),
