@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --radius: 0.625rem;
+
+  /* Brand teal */
+  --color-primary: oklch(0.53 0.15 192);
+  --color-primary-foreground: oklch(0.98 0 0);
+
+  /* Background */
+  --color-background: oklch(0.98 0 0);
+  --color-foreground: oklch(0.145 0 0);
+
+  /* Card */
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.145 0 0);
+
+  /* Muted */
+  --color-muted: oklch(0.961 0 0);
+  --color-muted-foreground: oklch(0.556 0 0);
+
+  /* Border */
+  --color-border: oklch(0.922 0 0);
+  --color-input: oklch(0.922 0 0);
+  --color-ring: oklch(0.53 0.15 192);
+
+  /* Accent */
+  --color-accent: oklch(0.961 0 0);
+  --color-accent-foreground: oklch(0.21 0 0);
+
+  /* Destructive */
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.98 0 0);
+
+  /* Secondary */
+  --color-secondary: oklch(0.961 0 0);
+  --color-secondary-foreground: oklch(0.21 0 0);
+
+  /* Popover */
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.145 0 0);
+
+  /* Sidebar */
+  --color-sidebar: oklch(0.985 0 0);
+  --color-sidebar-foreground: oklch(0.145 0 0);
+  --color-sidebar-primary: oklch(0.53 0.15 192);
+  --color-sidebar-primary-foreground: oklch(0.98 0 0);
+  --color-sidebar-accent: oklch(0.961 0 0);
+  --color-sidebar-accent-foreground: oklch(0.21 0 0);
+  --color-sidebar-border: oklch(0.922 0 0);
+  --color-sidebar-ring: oklch(0.53 0.15 192);
+
+  /* Chart colors */
+  --color-chart-1: oklch(0.53 0.15 192);
+  --color-chart-2: oklch(0.6 0.12 220);
+  --color-chart-3: oklch(0.398 0.07 227.392);
+  --color-chart-4: oklch(0.828 0.189 84.429);
+  --color-chart-5: oklch(0.769 0.188 70.08);
+}
+
+* {
+  border-color: var(--color-border);
+  outline-color: var(--color-ring);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.85 0 0);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.75 0 0);
+}
