@@ -3,16 +3,53 @@ import QRCode from 'react-qr-code'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { CONNECTED_DOCTORS, type ConnectedDoctor } from '@/data/patientPortalData'
 
 const SHARE_URL = 'https://suwadoc.com/share/mc-a7x2-2024'
 
+function DaysLeftBadge({ days }: { days: number }) {
+  if (days < 7) {
+    return (
+      <Badge className="bg-red-50 text-red-700 border-red-200 hover:bg-red-50 text-xs">
+        {days}d left
+      </Badge>
+    )
+  }
+  if (days <= 14) {
+    return (
+      <Badge className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50 text-xs">
+        {days}d left
+      </Badge>
+    )
+  }
+  return (
+    <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 text-xs">
+      {days}d left
+    </Badge>
+  )
+}
+
 export default function PatientSharePage() {
   const [email, setEmail] = useState('')
+  const [doctors, setDoctors] = useState<ConnectedDoctor[]>(CONNECTED_DOCTORS)
 
   function handleSend() {
     if (!email.trim()) return
     toast.success(`Secure link and OTP sent to ${email}`)
     setEmail('')
+  }
+
+  function handleExtend(id: string) {
+    setDoctors((prev) =>
+      prev.map((d) => (d.id === id ? { ...d, daysLeft: d.daysLeft + 30 } : d))
+    )
+  }
+
+  function handleRevoke(id: string) {
+    const doctor = doctors.find((d) => d.id === id)
+    setDoctors((prev) => prev.filter((d) => d.id !== id))
+    toast.success(`Access revoked for ${doctor?.name}`)
   }
 
   return (
@@ -23,6 +60,47 @@ export default function PatientSharePage() {
           Grant secure, time-limited access to your medical history.
         </p>
       </div>
+
+      {/* Section 0 — Who Has Access */}
+      {doctors.length > 0 && (
+        <div className="rounded-2xl bg-white shadow-sm border border-slate-200 p-6 space-y-4">
+          <h2 className="text-base font-semibold text-slate-800">Who Has Access</h2>
+          <div className="space-y-3">
+            {doctors.map((doctor) => (
+              <div
+                key={doctor.id}
+                className="rounded-xl border border-slate-100 bg-slate-50 p-4 space-y-3"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-slate-900 truncate">{doctor.name}</p>
+                    <p className="text-xs text-slate-500 truncate">{doctor.role}</p>
+                    <p className="text-xs text-slate-400 truncate">{doctor.clinic}</p>
+                  </div>
+                  <DaysLeftBadge days={doctor.daysLeft} />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 rounded-lg text-xs h-8"
+                    onClick={() => handleExtend(doctor.id)}
+                  >
+                    Extend
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="flex-1 rounded-lg text-xs h-8 bg-red-600 hover:bg-red-700 text-white"
+                    onClick={() => handleRevoke(doctor.id)}
+                  >
+                    Revoke Access
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Section A — In-Person */}
       <div className="rounded-2xl bg-white shadow-sm border border-slate-200 p-6 space-y-4">

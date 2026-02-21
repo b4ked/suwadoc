@@ -1,6 +1,35 @@
 import type { ChatMessage } from './mockData'
 
 // ============================================================
+// CONNECTED DOCTORS
+// ============================================================
+
+export interface ConnectedDoctor {
+  id: string
+  name: string
+  role: string
+  clinic: string
+  daysLeft: number
+}
+
+export const CONNECTED_DOCTORS: ConnectedDoctor[] = [
+  {
+    id: 'dr-1',
+    name: 'Dr. Sarah Jenkins',
+    role: 'Internal Medicine',
+    clinic: 'Harbor View Medical Center',
+    daysLeft: 8,
+  },
+  {
+    id: 'dr-2',
+    name: 'Dr. Robert Smith',
+    role: 'Cardiology',
+    clinic: 'Cardiology Associates',
+    daysLeft: 21,
+  },
+]
+
+// ============================================================
 // CARE TEAM
 // ============================================================
 
@@ -100,4 +129,6 @@ export const PLAIN_ENGLISH_SUMMARIES: Record<string, string> = {
     "This is a summary of your visit with Dr. Smith on November 12, 2024.\n\n**Why you came in:**\nYou visited for a routine check-up to monitor your blood pressure and cholesterol. You mentioned having mild morning headaches, but no chest pain or shortness of breath.\n\n**Your numbers that day:**\n- Blood pressure: 132/84 — slightly above target\n- Heart rate: 76 — normal and healthy\n- Weight: 83.2 kg, BMI: 27.5\n\n**What changed:**\n- Your doctor increased your blood pressure medication (Lisinopril) from 10mg to 20mg per day. This is a common adjustment to help bring your blood pressure down to a healthier level.\n- Dr. Smith also ordered a heart ultrasound (echocardiogram) to take a closer look at your heart. This is a standard precaution when blood pressure has been elevated for a while.\n\n**Your updated medications:**\n- Lisinopril 20mg — once daily (increased)\n- Atorvastatin 40mg — at bedtime (unchanged)\n- Aspirin 81mg — once daily (unchanged)\n\n**Next step:** Follow up in 6 weeks for a blood pressure re-check. Keep taking your medications as prescribed.",
   'doc-003':
     "An echocardiogram is an ultrasound of your heart — similar to a pregnancy ultrasound, but for your heart. It's painless and takes pictures of how your heart is working.\n\n**What was found:**\n- **Your heart is pumping well.** Your ejection fraction (the amount of blood your heart pumps out with each beat) is 62%, which is in the normal range. This is reassuring!\n- **Mild thickening of the heart wall.** The walls of your heart are slightly thicker than ideal. This is a common finding when blood pressure has been elevated for a long time — it's your heart adapting to work harder. It's called \"mild LVH\" in medical terms.\n- **Minor stiffness.** There's a small amount of stiffness in how your heart relaxes between beats. This is called \"Grade I diastolic dysfunction\" — it's mild and manageable.\n- **Slightly enlarged left upper chamber.** The left atrium (top-left chamber of your heart) is very slightly enlarged, which can happen alongside the stiffness mentioned above.\n\n**What this means for you:**\nThe most important thing you can do is keep your blood pressure well-controlled. Your doctor will likely want to repeat this test in about 12 months to see if things improve with better blood pressure management.\n\n**Next step:** Continue your blood pressure medications and attend your next appointment with Dr. Jenkins.",
+  'doc-004':
+    "A Complete Blood Count (CBC) with Differential is a routine blood test that looks at the different types of cells in your blood — red cells, white cells, and platelets.\n\n**What was tested:**\n- **White Blood Cells (WBC): 6.8 × 10³/µL** — Normal range. Your immune system is functioning well. No signs of infection or inflammation.\n- **Red Blood Cells (RBC): 4.7 × 10⁶/µL** — Normal. Your blood is carrying oxygen efficiently.\n- **Haemoglobin: 14.2 g/dL** — Normal. This confirms your red blood cells are healthy and carrying enough oxygen.\n- **Platelets: 215 × 10³/µL** — Normal. Your blood clotting function looks good.\n- **Neutrophils: 58%** — Normal. These are the main soldiers of your immune system.\n- **Lymphocytes: 32%** — Normal. These help your body fight viruses and infections.\n\n**What this means for you:**\nGreat news — all your values are within the normal range. This is a routine check and everything looks healthy. There are no signs of anaemia, infection, or any blood disorders.\n\n**Next step:** No immediate action required. Continue attending your regular check-ups with Dr. Jenkins as scheduled.",
 }

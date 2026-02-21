@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { FlaskConical, Stethoscope, ScanLine, ChevronRight, Upload } from 'lucide-react'
-import { toast } from 'sonner'
-import { MOCK_DOCUMENTS, type MedicalDocument } from '@/data/mockData'
+import { type MedicalDocument } from '@/data/mockData'
 import { PLAIN_ENGLISH_SUMMARIES } from '@/data/patientPortalData'
+import { useAppContext } from '@/context/useAppContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -12,8 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
-const PATIENT_DOCS = MOCK_DOCUMENTS.slice(0, 3)
+import UploadProgressModal from '@/components/documents/UploadProgressModal'
 
 function DocIcon({ type }: { type: MedicalDocument['type'] }) {
   if (type === 'lab_result') return <FlaskConical className="h-5 w-5 text-blue-500" />
@@ -30,7 +29,24 @@ function formatDate(dateStr: string) {
 }
 
 export default function PatientWalletPage() {
+  const { state, openUploadModal } = useAppContext()
+  const patientDocs = state.documents
   const [selectedDoc, setSelectedDoc] = useState<MedicalDocument | null>(null)
+  const [fileName, setFileName] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function handleUploadClick() {
+    fileInputRef.current?.click()
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setFileName(file.name)
+    openUploadModal()
+    // Reset input so the same file can be picked again if needed
+    e.target.value = ''
+  }
 
   return (
     <div className="max-w-lg mx-auto px-4 py-6 space-y-4">
@@ -40,16 +56,25 @@ export default function PatientWalletPage() {
           <h1 className="text-2xl font-bold text-slate-900">My Medical Wallet</h1>
           <p className="text-sm text-slate-500 mt-0.5">
             <Badge variant="secondary" className="font-normal">
-              {PATIENT_DOCS.length} records
+              {patientDocs.length} records
             </Badge>
           </p>
         </div>
       </div>
 
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.jpg,.png,.tiff"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
       {/* Upload button */}
       <Button
         className="w-full rounded-2xl h-12 text-base bg-blue-600 hover:bg-blue-700 text-white"
-        onClick={() => toast.info('Upload feature coming soon')}
+        onClick={handleUploadClick}
       >
         <Upload className="h-4 w-4 mr-2" />
         Upload New Record
@@ -57,7 +82,7 @@ export default function PatientWalletPage() {
 
       {/* Document cards */}
       <div className="space-y-3">
-        {PATIENT_DOCS.map((doc) => (
+        {patientDocs.map((doc) => (
           <button
             key={doc.id}
             onClick={() => setSelectedDoc(doc)}
@@ -174,6 +199,9 @@ export default function PatientWalletPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Upload progress modal */}
+      <UploadProgressModal fileName={fileName} />
     </div>
   )
 }
